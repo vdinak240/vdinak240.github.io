@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>The video controls attribute</h1>
+
+<video controls autoplay id="vid-id" width="320" height="240" >
+  <source src="test.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<script type="javascript">
+
+var theVideo = document.getElementById('vid-id');
+
+function playPause() { 
+    if (theVideo.paused) {
+            theVideo.play();
+        }
+    else  {
+            theVideo.pause();
+        }
+} 
+document.onkeydown = function(event) {
+    switch (event.keyCode) {
+        console.log(event.keyCode);
+       case 86:
+            event.preventDefault();
+            playPause();
+          break;
+       
+    }
+};
+</script>
+</body>
+</html>
