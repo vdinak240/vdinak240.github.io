@@ -1,0 +1,21 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <figure>
+        <audio controls id="audio" >
+        </audio>
+    </figure>
+</head>
+<title>Loop Debug</title>
+
+<body>
+    <p>Press any key to update song </p>
+    <script>
+        window.addEventListener("keydown", function (event) {
+            var audio = document.getElementById('audio');
+            audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
+            audio.play();
+        });       
+    </script>
+</body>
+</html>
