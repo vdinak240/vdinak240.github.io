@@ -1,5 +1,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-     <video autoplay loop id="video" src="https://pf-ui-lng-dev.xreapps.net/aagarw202/video/getty-output1.mp4" controls="false"></video>
+    <figure>
+        <audio controls id="audio" >
+        </audio>
+    </figure>
+     <video autoplay loop id="video" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" controls="false"></video>
 </head>
+<title>Loop Debug</title>
+
+<body>
+    <p>Press any key to update song </p>
+
+    <script>
+        window.addEventListener("keydown", function (event) {
+            var audio = document.getElementById('audio');
+            audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
+            audio.play();
+        });       
+    </script>
+
+</body>
+</html>
