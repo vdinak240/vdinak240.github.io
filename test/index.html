@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="keyboardNav.js"></script>
+    <style>
+        html, body {
+            background-color: #333333;
+            color: white;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        a, a:visited {
+            color: #5666d0;
+            text-decoration: none;
+        }
+        a:hover, a:focus {
+            color: #c156d0;
+        }
+    </style>
+</head>
+<body>
+<audio controls style="width: 500px"></audio>
+<br>
+<script>
+    var audio = document.querySelector('audio');
+    // audio.loop = true;
+    console.log('Testing 1');
+
+    audio.addEventListener('error', function (error) {
+        console.error('audio error', audio.error.code);
+    });
+    audio.addEventListener('ended', function () {
+        console.log('audio ended');
+    });
+
+    // Doesn't work on comcast at all, only 2s duration
+    // var assetURLs = ['assets/frag_bunny.mp4'];
+    // var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+    var folder = 'assets/aac_128k_44100_nodrm/';
+    var assetURLs = [ // Only using two segments for faster tests
+        folder + 'sample.mp4',
+        folder + 'part_1.m4s'
+        // folder + 'part_2.m4s',
+        // folder + 'part_3.m4s',
+        // folder + 'part_4.m4s'
+    ];
+    var mimeCodec = 'audio/mp4;codecs="mp4a.40.5"';
+
+    var currentIndex = 0;
+
+    if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+        var mediaSource = new MediaSource;
+        console.log('readyState', mediaSource.readyState); // closed
+        audio.src = URL.createObjectURL(mediaSource);
+        mediaSource.addEventListener('sourceopen', function() {
+            var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+            sourceBuffer.addEventListener('updateend', function () {
+                console.log('updateend readyState', mediaSource.readyState);
+                fetchNextSegment(sourceBuffer);
+            });
+            fetchNextSegment(sourceBuffer);
+        });
+    } else {
+        console.error('Unsupported MIME type or codec: ', mimeCodec);
+    }
+
+    /**
+     * If currently paused, invokes play, otherwise invokes paused.
+     */
+    function togglePlay() {
+        audio.currentTime = 0;
+        if (audio.paused) {
+            console.log('play')
+            audio.play();
+        } else {
+            console.log('pause')
+            audio.pause();
+        }
+
+    }
+
+    /**
+     * Fetches the next segment at currentIndex and appends to the given source buffer.
+     * @param sourceBuffer
+     */
+    function fetchNextSegment (sourceBuffer) {
+        console.log('readyState', this.readyState); // open
+        if (currentIndex === assetURLs.length) {
+            mediaSource.endOfStream();
+            return;
+        }
+        var assetURL = assetURLs[currentIndex++];
+        fetchSegment(assetURL, function (buf) {
+            sourceBuffer.appendBuffer(buf);
+        });
+    }
+
+    function fetchSegment (url, cb) {
+        console.log('fetching', url);
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', url);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+            cb(xhr.response);
+        };
+        xhr.send();
+    }
+</script>
+<a href="javascript:togglePlay()">Play</a>
+</body>
+</html>
