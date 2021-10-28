@@ -1,83 +1,25 @@
-
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>PlayReady DRM instantiation example</title>
-
-    <script src="../../dist/dash.all.debug.js"></script>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link href="../lib/main.css" rel="stylesheet">
-
-    <style>
-        video {
-            width: 640px;
-            height: 360px;
-        }
-    </style>
-
-    <script class="code">
-        function init() {
-            const protData = {
-                "com.microsoft.playready": {
-                    "serverURL": "https://drm-playready-licensing.axtest.net/AcquireLicense",
-                    "httpRequestHeaders": {
-                        "X-AxDRM-Message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiNjllNTQwODgtZTllMC00NTMwLThjMWEtMWViNmRjZDBkMTRlIiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsInZlcnNpb24iOjIsImxpY2Vuc2UiOnsiYWxsb3dfcGVyc2lzdGVuY2UiOnRydWV9LCJjb250ZW50X2tleXNfc291cmNlIjp7ImlubGluZSI6W3siaWQiOiJmOGM4MGMyNS02OTBmLTQ3MzYtODEzMi00MzBlNWM2OTk0Y2UiLCJlbmNyeXB0ZWRfa2V5IjoiaVhxNDlaODlzOGRDajBqbTJBN1h6UT09IiwidXNhZ2VfcG9saWN5IjoiUG9saWN5IEEifV19LCJjb250ZW50X2tleV91c2FnZV9wb2xpY2llcyI6W3sibmFtZSI6IlBvbGljeSBBIiwicGxheXJlYWR5Ijp7Im1pbl9kZXZpY2Vfc2VjdXJpdHlfbGV2ZWwiOjE1MCwicGxheV9lbmFibGVycyI6WyI3ODY2MjdEOC1DMkE2LTQ0QkUtOEY4OC0wOEFFMjU1QjAxQTciXX19XX19.k9OlwW0rUwuf5d5Eb0iO98AFR3qp7qKdFzSbg2PQj78"
-                    }
+<script>
+    function init() {
+        const protData = {
+            "com.microsoft.playready": {
+                "serverURL": "https://drm-playready-licensing.axtest.net/AcquireLicense",
+                "httpRequestHeaders": {
+                    "X-AxDRM-Message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiNjllNTQwODgtZTllMC00NTMwLThjMWEtMWViNmRjZDBkMTRlIiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsInZlcnNpb24iOjIsImxpY2Vuc2UiOnsiYWxsb3dfcGVyc2lzdGVuY2UiOnRydWV9LCJjb250ZW50X2tleXNfc291cmNlIjp7ImlubGluZSI6W3siaWQiOiJmOGM4MGMyNS02OTBmLTQ3MzYtODEzMi00MzBlNWM2OTk0Y2UiLCJlbmNyeXB0ZWRfa2V5IjoiaVhxNDlaODlzOGRDajBqbTJBN1h6UT09IiwidXNhZ2VfcG9saWN5IjoiUG9saWN5IEEifV19LCJjb250ZW50X2tleV91c2FnZV9wb2xpY2llcyI6W3sibmFtZSI6IlBvbGljeSBBIiwicGxheXJlYWR5Ijp7Im1pbl9kZXZpY2Vfc2VjdXJpdHlfbGV2ZWwiOjE1MCwicGxheV9lbmFibGVycyI6WyI3ODY2MjdEOC1DMkE2LTQ0QkUtOEY4OC0wOEFFMjU1QjAxQTciXX19XX19.k9OlwW0rUwuf5d5Eb0iO98AFR3qp7qKdFzSbg2PQj78"
                 }
-            };
-            var video,
-                player,
-                url = "https://media.axprod.net/TestVectors/v9-MultiFormat/Encrypted_Cbcs/Manifest_1080p.mpd";
+            }
+        };
+        var video,
+            player,
+            url = "https://media.axprod.net/TestVectors/v9-MultiFormat/Encrypted_Cbcs/Manifest_1080p.mpd";
 
-            video = document.querySelector("video");
-            player = dashjs.MediaPlayer().create();
-            player.initialize(video, url, true);
-            player.setProtectionData(protData);
-        }
-    </script>
-</head>
-<body>
-
-<main>
-    <div class="container py-4">
-        <header class="pb-3 mb-4 border-bottom">
-            <img class=""
-                 src="../lib/img/dashjs-logo.png"
-                 width="200">
-        </header>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="h-100 p-5 bg-light border rounded-3">
-                    <h3>PlayReady DRM instantiation example</h3>
-                    <p>This example shows how to use dash.js to play streams with PlayReady DRM protection. </p><p>For a detailed explanation on DRM playback in dash.js checkout the
-                    <a href="https://github.com/Dash-Industry-Forum/dash.js/wiki/Digital-Rights-Management-(DRM)-and-license-acquisition"
-                       target="_blank">Wiki</a>.</p>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <video controls="true"></video>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div id="code-output"></div>
-            </div>
-        </div>
-        <footer class="pt-3 mt-4 text-muted border-top">
-            &copy; DASH-IF
-        </footer>
-    </div>
-</main>
-
-
+        video = document.querySelector("video");
+        player = dashjs.MediaPlayer().create();
+        player.initialize(video, url, true);
+        player.setProtectionData(protData);
+    }
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         init();
     });
 </script>
-<script src="../highlighter.js"></script>
-</body>
-</html>
