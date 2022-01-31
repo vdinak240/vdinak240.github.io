@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Shaka Player compiled library: -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.2.0/shaka-player.compiled.js" integrity="sha512-9SpI4t+0FNlrOTC/bkahpYAV5gNXALQBZXk0zew1HQ9Am5iugZ7dgbIvNhL01GkyY+xDkdMagOAQizXUa2y/gQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script type="text/javascript" src="https://shaka-player-demo.appspot.com/demo/../dist/shaka-player.ui.js" defer=""></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.2.0/controls.css" integrity="sha512-Ex9LU/+wz44MJaxYviaW8Qu1it1XZ1OViNcPuzKADijuf2a3mPjaygxDky1vS9E7+nPAXjsrDOwa6i3Y7W5/7w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="https://luke-chang.github.io/js-spatial-navigation/spatial_navigation.js" defer=""></script>
+
+    <!-- Your application source: -->
+    <script type="text/javascript" src="options.js"></script>
+    <script type="text/javascript" src="spatial.js"></script>
+    <script type="text/javascript" src="myapp.js"></script>
+    <link rel="stylesheet" href="mystyle.css"></link>
+  </head>
+  <body>
+    <!-- video object -->
+    <div data-shaka-player-container data-shaka-player-cast-receiver-id="E7271BEC" >
+      <video id="video" class="focusable" 
+           poster="//shaka-player-demo.appspot.com/assets/poster.jpg"
+           controls autoplay data-shaka-player
+           style="width: 50%; height: 50%;"></video>
+      <!-- Over layer -->
+      <div class="text-block">
+        <pre id="taPlayingStatus" class="taPlayingStatus"> Playing status </pre>
+        <pre id="taStats" class="taStats">Stats for nerds</pre>
+      </div>
+    </div>
+
+    <div>
+      <label for="videoResDebug">Active resolution:</label>
+      <span id="videoResDebug">1920 x 1080</span>
+    </div>
+
+    <div>
+      <label for="bufferedDebug">Buffered:</label>
+      <span id="bufferedDebug">- 2s / + 33s</span>
+    </div>
+    
+
+    <!-- button which loads the video -->
+    <button type="button" class="btn focusable" id="loadBtn">Load</button>
+
+    <!-- choice of links -->
+    <select id="videoSelect" class="focusable">
+      <option id="option1">Text</option>
+    </select>
+    <div>
+      <pre id="taStats"></pre>
+    </div>
+
+    <div>
+      <p id="temp">
+        Text here
+      </p>
+
+  </body>
+</html>

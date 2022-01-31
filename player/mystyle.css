@@ -1,0 +1,50 @@
+.text-block {
+	position:  absolute;
+	right: 20px;
+	color: white;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.taStats{
+	opacity: 75%;
+	background-color: grey;
+	top: 20%;
+}
+
+.taPlayingStatus{
+	opacity: 75%;
+	background-color: grey;
+	top: 10%;
+}
+
+.playing{
+	background-color: green;
+}
+
+.paused{
+	background-color: orange;
+}
+
+.buffering{
+	background-color: red;
+}
+
+.btn{
+	border-radius: 4px;
+	outline: 0;
+	border:  1px;
+	padding: 5px;
+	color: whitesmoke;
+	font-weight: 600;
+	cursor: pointer;
+	background-color: #5cb85c;
+}
+
+:focus{
+	outline:  2px solid red;
+}
+
+body{
+	background-color: whitesmoke;
+}
