@@ -29,7 +29,19 @@
   </video>
 
   <script>
-    const player = videojs('my_video_1');
+    var options = {
+                controls: !1,
+                autoplay: !1,
+                preload: "auto",
+                loadingSpinner: !1
+            };
+            (options.hls = {
+                overrideNative: !0
+            }, options.html5 = {
+                nativeVideoTracks: !1,
+                nativeAudioTracks: !1
+            });
+    const player = videojs('my_video_1',options);
     player.src({
       src: 'http://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8',
       type: 'application/x-mpegURL'
