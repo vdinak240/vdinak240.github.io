@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Dash.js Rocks</title>
+        <style>
+            video {
+                width: 640px;
+                height: 360px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <video id="videoPlayer" controls></video>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/4.7.4/dash.all.min.js"></script>
+        <script>
+    function init() {
+        const protData = {
+            "org.w3.clearkey": {
+                "clearkeys": {
+                    "03c2e0af2f8159f9f0ce9b5dbc865f10": "cd84ed136b0cc71f8ab8cd4d4f6a2e4c"
+                }
+            }
+        };
+        var video,
+            player,
+            url = "https://linearjitp-playback.astro.com.my/dash-wv/linear/2504/default.mpd";
+
+        video = document.querySelector("video");
+        player = dashjs.MediaPlayer().create();
+        player.initialize(video, url, true);
+        player.setProtectionData(protData);
+    }
+    function check() {
+        if (location.protocol === 'http:' && location.hostname !== 'localhost') {
+            var out = 'This page has been loaded under http. This might result in the EME APIs not being available to the player and any DRM-protected content will fail to play. ' +
+                'If you wish to test manifest URLs that require EME support, then <a href=\'https:' + window.location.href.substring(window.location.protocol.length) + '\'>reload this page under https</a>.'
+            var div = document.getElementById('http-warning');
+            div.innerHTML = out;
+            div.style.display = ''
+        }
+    }
+</script>
+    </body>
+</html>
