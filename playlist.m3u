@@ -1,0 +1,19 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel Surya
+http://217.20.112.199/surya/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon2.png", Channel Asianet
+http://217.20.112.199/asianet/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel mazhavilmanorama
+http://45.249.171.155:8090/anandmedia/mazhavilmanorama_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel AsianetHD
+http://45.249.171.155:8090/anandmedia/asianethd_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon2.png", Channel AsianetPlus
+http://45.249.171.155:8090/anandmedia/asianetplus_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Asianetmovies
+http://45.249.171.155:8090/anandmedia/asianetmovies_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel flowerstv
+http://45.249.171.155:8090/anandmedia/flowerstv_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon2.png", Channel Kairalitv
+http://45.249.171.155:8090/anandmedia/kairalitv_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Kairaliwe
+http://45.249.171.155:8090/anandmedia/kairaliwe_576/index.m3u8
