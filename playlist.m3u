@@ -1,6 +1,6 @@
 #EXTM3U
 #EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel Surya
-http://217.20.112.199/surya/index.m3u8
+http://45.249.171.155:8090/anandmedia/suryahd_576/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon2.png", Channel Asianet
 http://217.20.112.199/asianet/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel mazhavilmanorama
