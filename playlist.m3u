@@ -19,3 +19,5 @@ http://45.249.171.155:8090/anandmedia/kairalitv_576/index.m3u8
 http://45.249.171.155:8090/anandmedia/kairaliwe_576/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel SuryaMovies
 http://45.249.171.155:8090/anandmedia/suryamovies/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel ZeeKerala
+http://45.249.171.155:8090/anandmedia/zeekeralamhd_576/index.m3u8
