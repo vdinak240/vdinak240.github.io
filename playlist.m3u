@@ -12,7 +12,7 @@ http://45.249.171.155:8090/anandmedia/asianetplus_576/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Asianetmovies
 http://45.249.171.155:8090/anandmedia/asianetmovies_576/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel flowerstv
-http://45.249.171.155:8090/anandmedia/flowerstv_576/index.m3u8
+https://yuppmedtaorire.akamaized.net/v1/master/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/flowers_nim_https/050522/flowers/playlist.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon2.png", Channel Kairalitv
 http://45.249.171.155:8090/anandmedia/kairalitv_576/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Kairaliwe
