@@ -11,13 +11,13 @@ http://45.249.171.155:8090/anandmedia/asianethd_576/index.m3u8
 http://45.249.171.155:8090/anandmedia/asianetplus_576/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Asianetmovies
 http://45.249.171.155:8090/anandmedia/asianetmovies_576/index.m3u8
-#EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel flowerstv
+#EXTINF:-1 tvg-logo="http://example.com/icon1.png", Channel flowerstv-usa
 https://yuppmedtaorire.akamaized.net/v1/master/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/flowers_nim_https/050522/flowers/playlist.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon2.png", Channel Kairalitv
-http://45.249.171.155:8090/anandmedia/kairalitv_576/index.m3u8
+http://103.199.161.254/Content/kairali/Live/Channel(Kairali)/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Kairaliwe
 https://yuppmedtaorire.akamaized.net/v1/master/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/wetv_nim_https/050522/wetv/playlist.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel SuryaMovies
 http://45.249.171.155:8090/anandmedia/suryamovies/index.m3u8
-#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel ZeeKerala
-http://45.249.171.155:8090/anandmedia/zeekeralamhd_576/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel flowers-india
+http://103.199.161.254/Content/flowers/Live/Channel(Flowers)/index.m3u8
