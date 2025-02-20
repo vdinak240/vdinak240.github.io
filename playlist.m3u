@@ -17,7 +17,7 @@ https://yuppmedtaorire.akamaized.net/v1/master/a0d007312bfd99c47f76b77ae26b1ccda
 http://103.199.161.254/Content/kairali/Live/Channel(Kairali)/index.m3u8
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel Kairaliwe
 https://yuppmedtaorire.akamaized.net/v1/master/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/wetv_nim_https/050522/wetv/playlist.m3u8
-#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel SuryaMovies
-http://45.249.171.155:8090/anandmedia/suryamovies/index.m3u8
+#EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel ICC cricket
+https://dj-tm-srvr2.vercel.app/icctv/ICC_CT25@DJ-TM.mpd?id=ch-hd-02|User-Agent=@DJ-TM&drmScheme=clearkey&drmLicense=ae7076b647133606b704d33e4cef5134:810251515584cf71216d9a2d1ebf04bb
 #EXTINF:-1 tvg-logo="http://example.com/icon3.png", Channel flowers-india
 http://103.199.161.254/Content/flowers/Live/Channel(Flowers)/index.m3u8
