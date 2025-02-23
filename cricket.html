@@ -33,8 +33,11 @@
 
         // Try to load a manifest.
         // This is an asynchronous process.
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const targetUrl = 'https://dj-tm-srvr2.vercel.app/icctv/ICC_CT25@DJ-TM.mpd?id=ch-hd-02|User-Agent=@DJ-TM&drmScheme=clearkey&drmLicense=ae7076b647133606b704d33e4cef5134:810251515584cf71216d9a2d1ebf04bb';
+
         try {
-          await player.load('https://dj-tm-srvr2.vercel.app/icctv/ICC_CT25@DJ-TM.mpd?id=ch-hd-02|User-Agent=@DJ-TM&drmScheme=clearkey&drmLicense=ae7076b647133606b704d33e4cef5134:810251515584cf71216d9a2d1ebf04bb');
+          await player.load(proxyUrl + targetUrl);
           // This runs if the asynchronous load is successful.
           console.log('The video has now been loaded!');
         } catch (e) {
