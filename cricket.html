@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DRM Protected Content Player</title>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+</head>
+<body>
+    <video id="videoPlayer" controls></video>
+
+    <script>
+        var url = 'https://dj-tm-srvr2.vercel.app/icctv/ICC_CT25@DJ-TM.mpd?id=ch-hd-02&drmScheme=clearkey&drmLicense=ae7076b647133606b704d33e4cef5134:810251515584cf71216d9a2d1ebf04bb';
+        var player = dashjs.MediaPlayer().create();
+        player.updateSettings({
+            'streaming': {
+                'http': {
+                    'headers': {
+                        'User-Agent': '@DJ-TM'
+                    }
+                }
+            }
+        });
+        player.initialize(document.querySelector('#videoPlayer'), url, true);
+
+        // DRM configuration
+        player.setProtectionData({
+            'org.w3.clearkey': {
+                serverURL: 'https://dj-tm-srvr2.vercel.app/icctv/ICC_CT25@DJ-TM.mpd?id=ch-hd-02&drmScheme=clearkey&drmLicense=ae7076b647133606b704d33e4cef5134:810251515584cf71216d9a2d1ebf04bb',
+                clearkeys: {
+                    'ae7076b647133606b704d33e4cef5134': '810251515584cf71216d9a2d1ebf04bb'
+                }
+            }
+        });
+    </script>
+</body>
