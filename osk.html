@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,26 +15,35 @@
             padding: 10px;
             width: 250px;
         }
+        #status {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <h1>Keyboard Test</h1>
     <input type="text" id="keyboardInput" placeholder="Tap to open keyboard" />
+    <p id="status">Press a key...</p>
 
     <script>
         const inputField = document.getElementById('keyboardInput');
+        const status = document.getElementById('status');
 
-        // When input gains focus, the browser automatically shows the keyboard on mobile
+        // Show keyboard status
         inputField.addEventListener('focus', () => {
-            console.log('Input focused: On-screen keyboard should appear.');
+            status.textContent = 'Keyboard is visible.';
         });
 
-        // When input loses focus, we can't directly "destroy" the keyboard,
-        // but we can blur the input to hide it.
         inputField.addEventListener('blur', () => {
-            console.log('Input blurred: On-screen keyboard should disappear.');
-            // Optionally, you can programmatically blur again or reset UI
+            status.textContent = 'Keyboard is hidden.';
         });
+
+        // Capture key presses and show key code
+        inputField.addEventListener('keydown', (event) => {
+            status.textContent = `Key Pressed: "${event.key}" | Key Code: ${event.code}`;
+            console.log(`Key: ${event.key}, Code: ${event.code}`);
+               });
     </script>
 </body>
-</html>
