@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Screen Keyboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            font-size: 18px;
+            padding: 10px;
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Keyboard Test</h1>
+    <input type="text" id="keyboardInput" placeholder="Tap to open keyboard" />
+
+    <script>
+        const inputField = document.getElementById('keyboardInput');
+
+        // When input gains focus, the browser automatically shows the keyboard on mobile
+        inputField.addEventListener('focus', () => {
+            console.log('Input focused: On-screen keyboard should appear.');
+        });
+
+        // When input loses focus, we can't directly "destroy" the keyboard,
+        // but we can blur the input to hide it.
+        inputField.addEventListener('blur', () => {
+            console.log('Input blurred: On-screen keyboard should disappear.');
+            // Optionally, you can programmatically blur again or reset UI
+        });
+    </script>
+</body>
+</html>
