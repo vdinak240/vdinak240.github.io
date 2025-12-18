@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Screen Keyboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            font-size: 18px;
+            padding: 10px;
+            width: 250px;
+            /* minimal change: allow moving to corners */
+            position: fixed;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+        #timer {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Keyboard Test</h1>
+    <input type="text" id="keyboardInput" placeholder="Tap to open keyboard" />
+    <p id="status">Waiting...</p>
+    <p id="timer">Next action in: 30s</p>
+
+    <script>
+        const inputField = document.getElementById('keyboardInput');
+        const status = document.getElementById('status');
+        const timerDisplay = document.getElementById('timer');
+
+        // Show keyboard status
+        inputField.addEventListener('focus', () => {
+            status.textContent = 'Keyboard is visible.';
+        });
+
+        inputField.addEventListener('blur', () => {
+            status.textContent = 'Keyboard is hidden.';
+        });
+
+        // Capture key presses and show key code
+        inputField.addEventListener('keydown', (event) => {
+            status.textContent = `Key Pressed: "${event.key}" | Key Code: ${event.code}`;
+            console.log(`Key: ${event.key}, Code: ${event.code}`);
+        });
+
+        // Auto focus/blur every 30 seconds with countdown
+        let isFocused = false;
+        let countdown = 30;
+
+        function updateTimer() {
+            timerDisplay.textContent = `Next action in: ${countdown}s`;
+        }
+
+        // minimal add: move input to a random corner
+        function moveInputToRandomCorner() {
+            // clear previous anchors
+            inputField.style.top = '';
+            inputField.style.left = '';
+            inputField.style.right = '';
+            inputField.style.bottom = '';
+
+            const corners = [
+                { name: 'top-left',    set: () => { inputField.style.top = '20px'; inputField.style.left = '20px'; } },
+                { name: 'top-right',   set: () => { inputField.style.top = '20px'; inputField.style.right = '20px'; } },
+                { name: 'bottom-left', set: () => { inputField.style.bottom = '20px'; inputField.style.left = '20px'; } },
+                { name: 'bottom-right',set: () => { inputField.style.bottom = '20px'; inputField.style.right = '20px'; } },
+            ];
+            const random = corners[Math.floor(Math.random() * corners.length)];
+            random.set();
+            status.textContent = `Input moved to: ${random.name.replace('-', ' ')}`;
+        }
+
+               function toggleFocus() {
+            // Clear input field on state change
+            inputField.value = '';
+
+            // minimal add: move to a random corner
+            moveInputToRandomCorner();
+
+            if (isFocused) {
+                inputField.blur();
+                isFocused = false;
+                status.textContent = 'Keyboard is hidden.';
+            } else {
+                inputField.focus();
+                isFocused = true;
+                status.textContent = 'Keyboard is visible.';
+            }
+            countdown = 30; // reset countdown
+            updateTimer();  // minimal add: refresh timer text immediately
+        }
+
+        // Start countdown
+        setInterval(() => {
+            countdown--;
+            updateTimer();
+            if (countdown <= 0) {
+                toggleFocus();
+            }
+        }, 1000); // every second
+
+        // optional: place it initially
+        moveInputToRandomCorner();
+        updateTimer();
+    </script>
+</body>
