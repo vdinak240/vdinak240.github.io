@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>On-Screen Keyboard / STB Remote Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input { font-size: 18px; padding: 10px; width: 250px; }
+    #status { margin-top: 20px; font-size: 20px; color: #333; }
+    #timer { margin-top: 10px; font-size: 18px; color: #007BFF; }
+    .hint { margin-top: 12px; color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Keyboard / Remote Test</h1>
+  <input type="text" id="keyboardInput" placeholder="Tap or press OK to focus" autocomplete="off" />
+  <p id="status">Waiting...</p>
+  <p id="timer">Next action in: 30s</p>
+  <p class="hint">Remote: OK/Enter toggles focus, Back/Menu defocus. DPAD moves caret if focused.</p>
+
+  <script>
+    const inputField = document.getElementById('keyboardInput');
+    const status = document.getElementById('status');
+    const timerDisplay = document.getElementById('timer');
+
+    // ---------- Focus/blur status ----------
+    function setStatus(msg) {
+      status.textContent = msg;
+    }
+
+    inputField.addEventListener('focus', () => setStatus('Keyboard (or input) is focused.'));
+    inputField.addEventListener('blur',  () => setStatus('Input is not focused.'));
+
+    // Show pressed keys for debugging
+    inputField.addEventListener('keydown', (event) => {
+      setStatus(`Key Pressed (focused): "${event.key}" | Code: ${event.code} | keyCode: ${event.keyCode}`);
+      // Allow typing using numeric keys; DPAD left/right will move caret naturally.
+    });
+
+    // ---------- Remote / Global Key Handling ----------
+    // Many STB browsers dispatch key events at the document level, not only when inputs are focused.
+    document.addEventListener('keydown', (event) => {
+      const k = normalizeKey(event);
+      // Uncomment this line to debug all key events from your STB:
+      // console.log('RAW', event.key, event.code, event.keyCode, '=> NORMALIZED', k);
+
+      if (isSelectKey(k)) {
+        event.preventDefault(); // treat as user gesture
+        toggleInputFocus();
+        return;
+      }
+
+      if (isBackKey(k) || isMenuKey(k) || isExitKey(k)) {
+        event.preventDefault(); // prevent navigating away if possible
+        if (document.activeElement === inputField) {
+          inputField.blur();
+          setStatus('Input is not focused (via Back/Menu).');
+        }
+        return;
+      }
+
+      // Optional: allow DPAD while focused to move caret / or to toggle
+      if (isDirectionalKey(k)) {
+        // If NOT focused, you may choose to focus on DPAD_CENTER only.
+        // If focused, let left/right move caret naturally; up/down you can prevent or ignore.
+        if (document.activeElement !== inputField) {
+          // If you want DPAD to focus input when not focused, uncomment:
+          // inputField.focus();
+          // setStatus('Focused via DPAD.');
+        }
+        return;
+      }
+
+      // Optional: allow number input when not focused (to simulate T9-like typing)
+      if (isNumericKey(k) && document.activeElement !== inputField) {
+        event.preventDefault();
+        inputField.focus();
+        // Append the number because some engines won't input when focus happens this tick
+        requestAnimationFrame(() => {
+          inputField.value += k.normalized; // normalized is '0'..'9'
+          setStatus(`Focused and typed "${k.normalized}" via remote numeric key.`);
+        });
+        return;
+      }
+    });
+
+    function toggleInputFocus() {
+      if (document.activeElement === inputField) {
+        inputField.blur();
+        setStatus('Input is not focused (via OK/Enter).');
+      } else {
+        inputField.focus(); // treated as user gesture from keydown
+        setStatus('Input is focused (via OK/Enter).');
+      }
+    }
+
+    // ---------- Key Normalization & Maps ----------
+    // We normalize to handle different platforms (Android TV, Tizen, webOS, custom STBs).
+    function normalizeKey(event) {
+      const key = (event.key || '').toLowerCase();
+      const code = (event.code || '').toLowerCase();
+      const kc = event.keyCode || event.which || 0;
+
+      // Common numeric keys (48-57) and numpad (96-105)
+      let numeric = null;
+      if (kc >= 48 && kc <= 57) numeric = String(kc - 48);
+      else if (kc >= 96 && kc <= 105) numeric = String(kc - 96);
+
+      return {
+        key,
+        code,
+        keyCode: kc,
+        normalized: numeric ?? key
+      };
+    }
+
+    function isSelectKey(k) {
+      // Typical OK/Enter/DPAD_CENTER mappings across platforms
+      const likely = new Set([
+        'enter', // desktops & many TVs
+        'ok',    // some STBs set key='OK'
+        'select'
+      ]);
+
+      // Common keyCodes:
+      // 13: Enter (desktop/web)
+      // 23: Android TV KEYCODE_DPAD_CENTER
+      // 66: Android KEYCODE_ENTER
+      // 29460: Samsung Tizen VK_ENTER
+      // Some engines don’t set .key reliably, so include codes:
+      const codeSet = new Set([13, 23, 66, 29460]);
+
+      return likely.has(k.key) || codeSet.has(k.keyCode);
+    }
+
+    function isBackKey(k) {
+      // Common back keys:
+      // 8: Backspace (desktop)
+      // 27: Escape (desktop)
+      // 4: Android KEYCODE_BACK
+      // 10009: Samsung Tizen VK_BACK
+      // 461: webOS back
+      const codeSet = new Set([8, 27, 4, 10009, 461]);
+      const keySet  = new Set(['backspace', 'escape', 'esc', 'browserback', 'goBack', 'back']);
+      return codeSet.has(k.keyCode) || keySet.has(k.key);
+    }
+
+    function isMenuKey(k) {
+      // 82: Android KEYCODE_MENU
+      // 10133: Samsung Tizen VK_MENU (varies by model)
+      const codeSet = new Set([82, 10133]);
+      const keySet  = new Set(['menu', 'contextmenu']);
+      return codeSet.has(k.keyCode) || keySet.has(k.key);
+    }
+
+    function isExitKey(k) {
+      // Some STBs provide Exit key codes
+      // 10182 is sometimes used on Tizen for EXIT
+      const codeSet = new Set([10182]);
+      const keySet  = new Set(['exit']);
+      return codeSet.has(k.keyCode) || keySet.has(k.key);
+    }
+
+    function isDirectionalKey(k) {
+      // DPAD arrows: 19 up, 20 down, 21 left, 22 right (Android)
+      // Desktop arrow keys as fallback
+      const codeSet = new Set([19, 20, 21, 22, 37, 38, 39, 40]);
+      const keySet  = new Set(['arrowup', 'arrowdown', 'arrowleft', 'arrowright']);
+      return codeSet.has(k.keyCode) || keySet.has(k.key);
+    }
+
+    function isNumericKey(k) {
+      return /^[0-9]$/.test(k.normalized);
+    }
+
+    // ---------- Optional: Auto focus/blur every 30s (kept from your original) ----------
+    let isFocused = false;
+    let countdown = 30;
+
+    function updateTimer() {
+      timerDisplay.textContent = `Next action in: ${countdown}s`;
+    }
+
+    function toggleFocusByTimer() {
+      inputField.value = '';
+      if (isFocused) {
+        inputField.blur();
+        isFocused = false;
+        setStatus('Input is not focused (via timer).');
+      } else {
+        inputField.focus();
+        isFocused = true;
+        setStatus('Input is focused (via timer).');
+      }
+      countdown = 30; // reset
+    }
+
+    // Keep this if you still want the timed toggle; otherwise comment out this interval.
+    setInterval(() => {
+      countdown--;
+      updateTimer();
+      if (countdown <= 0) {
+        toggleFocusByTimer();
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
+``
