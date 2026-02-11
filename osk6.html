@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>On-Screen Keyboard / STB Remote Test (KeyUp)</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input { font-size: 18px; padding: 10px; width: 280px; }
+    #status { margin-top: 20px; font-size: 20px; color: #333; }
+    .hint { margin-top: 12px; color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Keyboard / Remote Test</h1>
+  <input type="text" id="keyboardInput" placeholder="Press OK/Enter to focus" autocomplete="off" />
+  <p id="status">Waiting...</p>
+  <p class="hint">Remote: OK/Enter toggles focus. Back/Menu/Exit defocus. Numeric keys can type &amp; focus.</p>
+
+  <script>
+    const inputField = document.getElementById('keyboardInput');
+    const status = document.getElementById('status');
+
+    // Heuristic: treat TV-like UAs specially (for preventDefault)
+    const isTVLike = /tizen|web0s|smart-tv|smarttv|hbbtv|netcast|apple ?tv|aft[\w-]+|android tv|bravia|shield tv|fire tv/i
+      .test(navigator.userAgent);
+
+    // ===== Debug overlay (on-screen logger, optional) =====
+    const debugEl = createDebugOverlay();
+    function createDebugOverlay() {
+      const box = document.createElement('div');
+      box.style.cssText = `
+        position:fixed; right:8px; bottom:8px; max-width:48vw; max-height:40vh; overflow:auto;
+        background:rgba(0,0,0,0.6); color:#fff; font:12px/1.3 monospace;
+        padding:8px; border-radius:6px; z-index:99999; text-align:left;
+      `;
+      box.setAttribute('aria-hidden', 'true');
+      box.title = 'Remote/Key Debug';
+      document.body.appendChild(box);
+      return box;
+    }
+    function logDebug(...args) {
+      const line = args.map(v => (typeof v === 'object' ? JSON.stringify(v) : String(v))).join(' ');
+      const p = document.createElement('div');
+      p.textContent = line;
+      debugEl.prepend(p);
+      while (debugEl.childElementCount > 20) debugEl.removeChild(debugEl.lastChild);
+      // console.log('[DBG]', ...args); // enable if you connect devtools
+    }
+    function setStatus(msg) {
+      status.textContent = msg;
+      logDebug(msg);
+    }
+
+    // ===== Focus / blur status =====
+    inputField.addEventListener('focus', () => setStatus('Input is focused.'));
+    inputField.addEventListener('blur',  () => setStatus('Input is not focused.'));
+
+    // Show pressed keys when input is focused (for debugging) — now on keyup
+    inputField.addEventListener('keyup', (event) => {
+      setStatus(`Key Released (focused): "${event.key}" | Code: ${event.code} | keyCode: ${event.keyCode}`);
+    });
+
+    // ===== Global key handling — now on keyup =====
+    document.addEventListener('keyup', (event) => {
+      const k = normalizeKey(event);
+      logDebug(`RAW key="${event.key}" code="${event.code}" keyCode=${event.keyCode} =>`, k);
+
+      const prevent = () => { if (isTVLike) event.preventDefault(); };
+
+      // OK / Enter / DPAD_CENTER toggles focus
+      if (isSelectKey(k)) {
+        prevent(); // often no effect on keyup; kept for symmetry
+        toggleInputFocus();
+        return;
+      }
+
+      // Back / Menu / Exit defocus
+      if (isBackKey(k) || isMenuKey(k) || isExitKey(k)) {
+        prevent(); // often no effect on keyup; kept for symmetry
+        if (document.activeElement === inputField) {
+          inputField.blur();
+          setStatus('Input is not focused (via Back/Menu/Exit).');
+        }
+        return;
+      }
+
+      // DPAD arrows — leave native behavior (caret movement) when focused
+      if (isDirectionalKey(k)) {
+        return;
+      }
+
+      // Numeric keys — focus and type when not focused
+      if (isNumericKey(k) && document.activeElement !== inputField) {
+        prevent();
+        inputField.focus();
+        requestAnimationFrame(() => {
+          inputField.value += k.normalized; // '0'..'9'
+          setStatus(`Focused and typed "${k.normalized}" via remote numeric key.`);
+        });
+        return;
+      }
+
+      // Optional: Color / Channel / Media keys — show tag in status
+      if (isColorKey(k) || isChannelKey(k) || isMediaKey(k)) {
+        prevent();
+        setStatus(`Special key released: ${k.tag}`);
+        return;
+      }
+    });
+
+    function toggleInputFocus() {
+      if (document.activeElement === inputField) {
+        inputField.blur();
+        setStatus('Input is not focused (via OK/Enter).');
+      } else {
+        inputField.focus();
+        setStatus('Input is focused (via OK/Enter).');
+      }
+    }
+
+    // ===== Key normalization & maps =====
+    function normalizeKey(event) {
+      const key = (event.key || '').toLowerCase();
+      const code = (event.code || '').toLowerCase();
+      const kc = event.keyCode || event.which || 0;
+
+      // Numeric normalization (top row 48–57, numpad 96–105)
+      let numeric = null;
+      if (kc >= 48 && kc <= 57) numeric = String(kc - 48);
+      else if (kc >= 96 && kc <= 105) numeric = String(kc - 96);
+
+      return {
+        key,
+        code,
+        keyCode: kc,
+        normalized: numeric ?? key,
+        tag: tagKey(kc, key) // friendly name for special keys
+      };
+    }
+
+    function isSelectKey(k) {
+      // Enter: 13 / DPAD_CENTER: 23 (Android) / Enter: 66 / Tizen VK_ENTER: 29460
+      return new Set([13, 23, 66, 29460]).has(k.keyCode) ||
+             new Set(['enter', 'ok', 'select']).has(k.key);
+    }
+
+    function isBackKey(k) {
+      // Backspace: 8 / Esc: 27 / Android Back: 4 / Tizen Back: 10009 / webOS Back: 461
+      return new Set([8, 27, 4, 10009, 461]).has(k.keyCode) ||
+             new Set(['backspace', 'escape', 'esc', 'browserback', 'goback', 'back']).has(k.key);
+    }
+
+    function isMenuKey(k) {
+      // Android Menu: 82 / Tizen Menu (varies): ~10133
+      return new Set([82, 10133]).has(k.keyCode) ||
+             new Set(['menu', 'contextmenu']).has(k.key);
+    }
+
+    function isExitKey(k) {
+      // Some STBs: 10182
+      return new Set([10182]).has(k.keyCode) ||
+             new Set(['exit']).has(k.key);
+    }
+
+    function isDirectionalKey(k) {
+      // Android DPAD: 19↑,20↓,21←,22→ ; Desktop arrows: 37←,38↑,39→,40↓
+      return new Set([19,20,21,22,37,38,39,40]).has(k.keyCode) ||
+             new Set(['arrowup','arrowdown','arrowleft','arrowright']).has(k.key);
+    }
+
+    function isNumericKey(k) {
+      return /^[0-9]$/.test(k.normalized);
+    }
+
+    function isColorKey(k) {
+      // Common color keys: 403 RED, 404 GREEN, 405 YELLOW, 406 BLUE
+      const colorMap = {403:'RED',404:'GREEN',405:'YELLOW',406:'BLUE'};
+      if (colorMap[k.keyCode]) { k.tag = colorMap[k.keyCode]; return true; }
+      return ['red','green','yellow','blue','colorf0','colorf1','colorf2','colorf3'].includes(k.key);
+    }
+
+    function isChannelKey(k) {
+      // Common channel keys: 427 UP, 428 DOWN
+      const map = {427:'CHANNEL_UP',428:'CHANNEL_DOWN'};
+      if (map[k.keyCode]) { k.tag = map[k.keyCode]; return true; }
+      return ['channelup','chup','channeldown','chdown'].includes(k.key);
+    }
+
+    function isMediaKey(k) {
+      const map = {415:'PLAY',413:'STOP',417:'FAST_FORWARD',412:'REWIND'};
+      if (map[k.keyCode]) { k.tag = map[k.keyCode]; return true; }
+      return ['play','pause','stop','fastforward','rewind','mediaplaypause'].includes(k.key);
+    }
+
+    function tagKey(kc, key) {
+      const lookup = {
+        403:'RED',404:'GREEN',405:'YELLOW',406:'BLUE',
+        427:'CHANNEL_UP',428:'CHANNEL_DOWN',
+        415:'PLAY',413:'STOP',417:'FAST_FORWARD',412:'REWIND',
+        13:'ENTER',23:'DPAD_CENTER',66:'ENTER',
+        10009:'BACK(TIZEN)',461:'BACK(webOS)'
+      };
+      return lookup[kc] || key || String(kc);
+    }
+  </script>
+</body>
+</html>
